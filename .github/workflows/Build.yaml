@@ -1,0 +1,75 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+     - main
+
+env:
+  DOTNET_VERSION: '9.0.x'
+
+concurrency:
+  # Use github.run_id on main branch
+  # Use github.event.pull_request.number on pull requests, so it's unique per pull request
+  # Use github.ref on other branches, so it's unique per branch
+  group: ${{ github.workflow }}-${{ github.ref == 'refs/heads/main' && github.run_id || github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+
+    # When the workflow runs, this is the name that is logged
+    name: build-and-test-${{matrix.os}}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+
+    steps:
+      - name: Checkout the Source Code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Add .NET global tools to PATH
+        run: echo "${{ env.HOME }}/.dotnet/tools" >> $GITHUB_PATH
+
+      - name: Install coverage tools
+        run: |
+          dotnet tool install --global dotnet-reportgenerator-globaltool
+          dotnet tool install --global dotnet-coverage
+      
+      - name: Install dependencies
+        run: dotnet restore
+      
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Test
+        run: dotnet test --no-restore --verbosity normal
+
+      - name: Run tests with coverage
+        run: |
+          dotnet coverage collect dotnet test \
+            --output ${{ github.workspace }}/Tests/Coverage \
+            --output-format cobertura \
+            --settings CodeCoverage.runsettings
+
+      - name: Generate coverage report
+        run: |
+          reportgenerator \
+            -reports:${{ github.workspace }}/Tests/Coverage \
+            -targetdir:${{ github.workspace }}/Tests/coveragereport \
+            -reporttypes:Html
+
+      - name: Upload code coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coveragereport
+          path: ${{ github.workspace }}/Tests/coveragereport
