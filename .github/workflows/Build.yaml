@@ -19,6 +19,15 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  check_formatting:
+    runs-on: ubuntu-latest
+    name: Check Formatting
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          dotnet tool restore
+          dotnet csharpier check .
+
   build-and-test:
 
     # When the workflow runs, this is the name that is logged
