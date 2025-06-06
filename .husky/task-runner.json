@@ -1,0 +1,31 @@
+{
+  "$schema": "https://alirezanet.github.io/Husky.Net/schema.json",
+  "tasks": [
+    {
+      "name": "welcome-message-example",
+      "command": "bash",
+      "args": [
+        "-c",
+        "echo Preparing to format!"
+      ],
+      "windows": {
+        "command": "cmd",
+        "args": [
+          "/c",
+          "echo Preparing to format!"
+        ]
+      }
+    },
+    {
+      "name": "Run csharpier",
+      "command": "csharpier",
+      "args": [
+        "format",
+        "${staged}"
+      ],
+      "include": [
+        "**/*.cs"
+      ]
+    }
+  ]
+}
