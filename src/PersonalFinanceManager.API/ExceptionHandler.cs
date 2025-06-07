@@ -17,8 +17,16 @@ public static class ExceptionHandler
                     .ForContext(
                         "RequestPath",
                         context.Request.Path == PathString.Empty
-                            ? context.Request.PathBase.ToString().Replace(Environment.NewLine, "").Replace("\r", "").Replace("\n", "")
-                            : context.Request.Path.ToString().Replace(Environment.NewLine, "").Replace("\r", "").Replace("\n", "")
+                            ? context
+                                .Request.PathBase.ToString()
+                                .Replace(Environment.NewLine, "")
+                                .Replace("\r", "")
+                                .Replace("\n", "")
+                            : context
+                                .Request.Path.ToString()
+                                .Replace(Environment.NewLine, "")
+                                .Replace("\r", "")
+                                .Replace("\n", "")
                     );
                 context.Response.StatusCode = StatusCodes.Status500InternalServerError;
                 context.Response.ContentType = MediaTypeNames.Text.Plain;

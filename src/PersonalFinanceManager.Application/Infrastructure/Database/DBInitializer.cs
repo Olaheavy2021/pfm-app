@@ -53,7 +53,7 @@ public class DBInitializer()
                     password: "Admin@123"
                 );
 
-                if (createUserResult.Succeeded == false)
+                if (!createUserResult.Succeeded)
                 {
                     var errors = createUserResult.Errors.Select(e => e.Description);
                     logger.Warning(
@@ -67,7 +67,7 @@ public class DBInitializer()
                     role: AppConstants.AdminRole
                 );
 
-                if (addUserToRoleResult.Succeeded == false)
+                if (!addUserToRoleResult.Succeeded)
                 {
                     var errors = addUserToRoleResult.Errors.Select(e => e.Description);
                     logger.Warning(
