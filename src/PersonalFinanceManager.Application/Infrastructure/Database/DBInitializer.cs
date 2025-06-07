@@ -35,7 +35,7 @@ public class DBInitializer()
                         new IdentityRole(AppConstants.AdminRole)
                     );
 
-                    if (roleResult.Succeeded == false)
+                    if (!roleResult.Succeeded)
                     {
                         var roleErros = roleResult.Errors.Select(e => e.Description);
                         logger.Warning(
