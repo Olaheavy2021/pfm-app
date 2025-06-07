@@ -8,6 +8,9 @@ on:
     branches: 
     - main
 
+env:
+  DOTNET_VERSION: '9.0.x'
+
 concurrency:
   # Use github.run_id on main branch
   # Use github.event.pull_request.number on pull requests, so it's unique per pull request
