@@ -21,6 +21,7 @@ public class GetWeatherForecasts : ICarterModule
             .WithTags(nameof(WeatherForecast))
             .WithDescription("Get weather forecasts")
             .WithSummary("Get weather forecasts")
+            .RequireAuthorization()
             .Produces<List<WeatherForecastResponse>>();
     }
 

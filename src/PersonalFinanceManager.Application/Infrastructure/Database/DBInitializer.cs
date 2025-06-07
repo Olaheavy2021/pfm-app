@@ -31,13 +31,14 @@ public class DBInitializer()
                 if (!await roleManager!.RoleExistsAsync(AppConstants.AdminRole))
                 {
                     logger.Information("Admin role is creating");
-                    var roleResult = await roleManager.CreateAsync(
+
+                    var adminRoleResult = await roleManager.CreateAsync(
                         new IdentityRole(AppConstants.AdminRole)
                     );
 
-                    if (!roleResult.Succeeded)
+                    if (!adminRoleResult.Succeeded)
                     {
-                        var roleErros = roleResult.Errors.Select(e => e.Description);
+                        var roleErros = adminRoleResult.Errors.Select(e => e.Description);
                         logger.Warning(
                             $"Failed to create admin role. Errors : {string.Join(",", roleErros)}"
                         );
@@ -45,6 +46,21 @@ public class DBInitializer()
                         return;
                     }
                     logger.Information("Admin role is created");
+
+                    var userRoleResult = await roleManager.CreateAsync(
+                        new IdentityRole(AppConstants.UserRole)
+                    );
+
+                    if (!userRoleResult.Succeeded)
+                    {
+                        var roleErros = userRoleResult.Errors.Select(e => e.Description);
+                        logger.Warning(
+                            $"Failed to create user role. Errors : {string.Join(",", roleErros)}"
+                        );
+
+                        return;
+                    }
+                    logger.Information("User role is created");
                 }
 
                 // Attempt to create admin user
