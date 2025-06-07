@@ -52,7 +52,7 @@ public static class ServiceCollectionExtensions
     )
     {
         DependencyContextAssemblyCatalog assemblyCatalog = new DependencyContextAssemblyCatalog(
-            ((IEnumerable<Type>)handlerAssemblyMarkerTypes)
+            handlerAssemblyMarkerTypes
                 .Select<Type, Assembly>((Func<Type, Assembly>)(t => t.Assembly))
                 .ToArray<Assembly>()
         );
