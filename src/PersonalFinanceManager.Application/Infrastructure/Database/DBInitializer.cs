@@ -17,7 +17,7 @@ public class DBInitializer()
             var userManager = scope.ServiceProvider.GetService<UserManager<ApplicationUser>>();
             var roleManager = scope.ServiceProvider.GetService<RoleManager<IdentityRole>>();
 
-            if (userManager!.Users.Any() == false)
+            if (!userManager!.Users.Any())
             {
                 var user = new ApplicationUser
                 {
