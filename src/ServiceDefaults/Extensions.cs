@@ -7,6 +7,7 @@ using Microsoft.Extensions.ServiceDiscovery;
 using OpenTelemetry;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
+using Serilog;
 
 namespace Microsoft.Extensions.Hosting
 {
@@ -18,6 +19,9 @@ namespace Microsoft.Extensions.Hosting
         public static TBuilder AddServiceDefaults<TBuilder>(this TBuilder builder)
             where TBuilder : IHostApplicationBuilder
         {
+            Log.Logger.ConfigureSerilogBootstrapLogger();
+            builder.ConfigureSerilog();
+
             builder.ConfigureOpenTelemetry();
 
             builder.AddDefaultHealthChecks();
