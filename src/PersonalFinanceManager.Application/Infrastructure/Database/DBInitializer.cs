@@ -28,7 +28,7 @@ public class DBInitializer()
                     SecurityStamp = Guid.NewGuid().ToString(),
                 };
 
-                if (await roleManager!.RoleExistsAsync(AppConstants.AdminRole) == false)
+                if (!await roleManager!.RoleExistsAsync(AppConstants.AdminRole))
                 {
                     logger.Information("Admin role is creating");
                     var roleResult = await roleManager.CreateAsync(
