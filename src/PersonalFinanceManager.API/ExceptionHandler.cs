@@ -1,8 +1,4 @@
-﻿using System.Net.Mime;
-using System.Text;
-using Microsoft.AspNetCore.Diagnostics;
-
-namespace PersonalFinanceManager.API;
+﻿namespace PersonalFinanceManager.API;
 
 public static class ExceptionHandler
 {

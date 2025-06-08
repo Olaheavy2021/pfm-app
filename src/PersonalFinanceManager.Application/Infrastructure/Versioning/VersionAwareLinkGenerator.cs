@@ -1,8 +1,4 @@
-﻿using Carter;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Routing;
-
-namespace PersonalFinanceManager.Application.Infrastructure.Versioning;
+﻿namespace PersonalFinanceManager.Application.Infrastructure.Versioning;
 
 public class VersionAwareLinkGenerator(
     IHttpContextAccessor httpContextAccessor,

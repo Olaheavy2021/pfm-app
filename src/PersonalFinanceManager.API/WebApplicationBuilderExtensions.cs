@@ -1,8 +1,4 @@
-﻿using Carter;
-using PersonalFinanceManager.Application.Constants;
-using PersonalFinanceManager.Application.Infrastructure.Database;
-
-namespace PersonalFinanceManager.API;
+﻿namespace PersonalFinanceManager.API;
 
 public static class WebApplicationBuilderExtensions
 {
@@ -11,6 +7,10 @@ public static class WebApplicationBuilderExtensions
         app.UseSerilogRequestLogging();
         app.UseCommonExceptionHandler();
         app.UseCors(AppConstants.CorsPolicy);
+        app.NewVersionedApi()
+            .MapGroup("/api/auth/v{version:apiVersion}")
+            .WithTags("Auth")
+            .MapCustomIdentityApi<ApplicationUser>();
         app.NewVersionedApi().MapGroup("/api/v{version:apiVersion}").MapCarter();
 
         app.MapDefaultEndpoints();
@@ -19,16 +19,22 @@ public static class WebApplicationBuilderExtensions
         if (app.Environment.IsDevelopment())
         {
             app.MapOpenApi();
-            app.UseSwaggerUI(options =>
-                options.SwaggerEndpoint("/openapi/v1.json", AppConstants.ApplicationName)
-            );
-        }
 
-        app.UseHttpsRedirection();
-        app.UseAuthorization();
+            app.MapScalarApiReference(options =>
+            {
+                options
+                    .WithTitle($"{AppConstants.ApplicationName} - Scalar")
+                    .WithTheme(ScalarTheme.Purple)
+                    .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient)
+                    .AddHttpAuthentication("Bearer", options => options.WithToken(""));
+            });
+        }
 
         var dbInitializer = app.Services.GetRequiredService<DBInitializer>();
         await dbInitializer.SeedData(app);
+
+        app.UseHttpsRedirection();
+        app.UseAuthorization();
 
         return app;
     }

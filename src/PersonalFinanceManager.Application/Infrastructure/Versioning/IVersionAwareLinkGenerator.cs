@@ -1,6 +1,4 @@
-﻿using Carter;
-
-namespace PersonalFinanceManager.Application.Infrastructure.Versioning;
+﻿namespace PersonalFinanceManager.Application.Infrastructure.Versioning;
 
 public interface IVersionAwareLinkGenerator
 {

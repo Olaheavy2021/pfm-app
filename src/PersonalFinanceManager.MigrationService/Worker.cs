@@ -1,12 +1,9 @@
-using System.Diagnostics;
-using Microsoft.EntityFrameworkCore;
-using PersonalFinanceManager.Application.Infrastructure.Database;
-
 namespace PersonalFinanceManager.MigrationService;
 
 public class Worker(
     IServiceProvider serviceProvider,
-    IHostApplicationLifetime hostApplicationLifetime
+    IHostApplicationLifetime hostApplicationLifetime,
+    ILogger logger
 ) : BackgroundService
 {
     public const string ActivitySourceName = "Migrations";
@@ -21,21 +18,23 @@ public class Worker(
 
         try
         {
+            logger.Information("Starting migration...");
             using var scope = serviceProvider.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
             await RunMigrationAsync(dbContext, cancellationToken);
+            logger.Information("Migration completed successfully.");
         }
         catch (Exception ex)
         {
             activity?.AddException(ex);
 
-            Console.WriteLine("Migration failed:");
-            Console.WriteLine(ex.Message);
+            logger.Error(ex, "Migration failed:");
+            logger.Error(ex.Message);
             if (ex.InnerException != null)
             {
-                Console.WriteLine("Inner exception:");
-                Console.WriteLine(ex.InnerException.Message);
+                logger.Warning("Inner exception:");
+                logger.Error(ex.InnerException.Message);
             }
 
             throw;
@@ -52,7 +51,6 @@ public class Worker(
         var strategy = dbContext.Database.CreateExecutionStrategy();
         await strategy.ExecuteAsync(async () =>
         {
-            // Run migration in a transaction to avoid partial migration if it fails.
             await dbContext.Database.MigrateAsync(cancellationToken);
         });
     }

@@ -1,9 +1,4 @@
-﻿using System.Net;
-using FluentValidation;
-using FluentValidation.Results;
-using MediatR;
-
-namespace PersonalFinanceManager.API.Behaviors;
+﻿namespace PersonalFinanceManager.API.Behaviors;
 
 public sealed class ValidationBehavior<TRequest, TResponse>(
     IEnumerable<IValidator<TRequest>> validators

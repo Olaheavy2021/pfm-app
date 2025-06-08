@@ -1,9 +1,4 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
-using PersonalFinanceManager.Application.Constants;
-using PersonalFinanceManager.Application.Models;
-
-namespace PersonalFinanceManager.Application.Infrastructure.Database;
+﻿namespace PersonalFinanceManager.Application.Infrastructure.Database;
 
 public class DBInitializer()
 {

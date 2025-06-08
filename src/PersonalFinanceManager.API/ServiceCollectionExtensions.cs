@@ -1,15 +1,4 @@
-﻿using System.Reflection;
-using Carter;
-using MediatR;
-using PersonalFinanceManager.API.Behaviors;
-using PersonalFinanceManager.API.Infrastructure.Behaviors;
-using PersonalFinanceManager.Application;
-using PersonalFinanceManager.Application.Constants;
-using PersonalFinanceManager.Application.Infrastructure.Database;
-using PersonalFinanceManager.Application.Infrastructure.OptionsValidation;
-using PersonalFinanceManager.Application.Infrastructure.Versioning;
-
-namespace PersonalFinanceManager.API;
+﻿namespace PersonalFinanceManager.API;
 
 public static class ServiceCollectionExtensions
 {
@@ -26,7 +15,6 @@ public static class ServiceCollectionExtensions
             .AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>))
             .AddProblemDetails()
             .AddEndpointsApiExplorer()
-            .AddSwaggerGen()
             .AddCarterModules(typeof(IApiMarker));
 
         services.AddDatabase(config[AppConstants.DbConnectionString]!);
@@ -51,10 +39,8 @@ public static class ServiceCollectionExtensions
         params Type[] handlerAssemblyMarkerTypes
     )
     {
-        DependencyContextAssemblyCatalog assemblyCatalog = new DependencyContextAssemblyCatalog(
-            handlerAssemblyMarkerTypes
-                .Select<Type, Assembly>((Func<Type, Assembly>)(t => t.Assembly))
-                .ToArray<Assembly>()
+        DependencyContextAssemblyCatalog assemblyCatalog = new(
+            [.. handlerAssemblyMarkerTypes.Select(t => t.Assembly)]
         );
         return services.AddCarter(assemblyCatalog);
     }

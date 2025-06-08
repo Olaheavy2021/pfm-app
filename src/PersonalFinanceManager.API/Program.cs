@@ -1,6 +1,3 @@
-using PersonalFinanceManager.API;
-using PersonalFinanceManager.Application.Constants;
-
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
 
@@ -14,10 +11,13 @@ builder.Services.AddAuthorization();
 builder.Services.AddServiceCollections(config);
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+builder.Services.AddOpenApi(
+    "v1",
+    options => options.AddDocumentTransformer<BearerSecuritySchemeTransformer>()
+);
 
 var app = builder.Build();
 
-app.UseMyAppDefaultsAsync();
+await app.UseMyAppDefaultsAsync();
 
 app.Run();

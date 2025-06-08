@@ -1,7 +1,4 @@
-﻿using System.Data;
-using Npgsql;
-
-namespace PersonalFinanceManager.Application.Infrastructure.Database;
+﻿namespace PersonalFinanceManager.Application.Infrastructure.Database;
 
 public interface IDbConnectionFactory
 {

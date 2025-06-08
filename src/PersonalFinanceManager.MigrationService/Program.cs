@@ -1,6 +1,3 @@
-using PersonalFinanceManager.Application.Infrastructure.Database;
-using PersonalFinanceManager.MigrationService;
-
 var builder = Host.CreateApplicationBuilder(args);
 
 builder.AddServiceDefaults();

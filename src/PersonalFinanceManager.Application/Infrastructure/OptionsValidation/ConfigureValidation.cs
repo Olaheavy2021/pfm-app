@@ -1,7 +1,4 @@
-﻿using FluentValidation;
-using Microsoft.Extensions.DependencyInjection;
-
-namespace PersonalFinanceManager.Application.Infrastructure.OptionsValidation;
+﻿namespace PersonalFinanceManager.Application.Infrastructure.OptionsValidation;
 
 public static class ConfigureValidation
 {

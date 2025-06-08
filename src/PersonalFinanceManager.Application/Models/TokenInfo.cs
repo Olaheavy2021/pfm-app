@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace PersonalFinanceManager.Application.Models;
+﻿namespace PersonalFinanceManager.Application.Models;
 
 public class TokenInfo
 {

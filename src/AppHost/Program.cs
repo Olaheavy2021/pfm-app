@@ -1,5 +1,3 @@
-using AppHost;
-
 var builder = DistributedApplication.CreateBuilder(args);
 
 /*Backing Services */
@@ -34,4 +32,5 @@ builder
     .WaitFor(migrationService);
 
 /*Projects*/
+
 builder.Build().Run();

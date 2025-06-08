@@ -1,4 +1,4 @@
-﻿namespace PersonalFinanceManager.API.Infrastructure.Behaviors;
+﻿namespace PersonalFinanceManager.Application.Infrastructure.MediatR;
 
 public static class ConfigureMediatR
 {

@@ -1,7 +1,4 @@
-﻿using System.Globalization;
-using System.Text.Json;
-
-namespace PersonalFinanceManager.API.Infrastructure.Utils;
+﻿namespace PersonalFinanceManager.API.Infrastructure.Utils;
 
 public static class StringExtensions
 {

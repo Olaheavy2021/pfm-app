@@ -1,7 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Reflection;
-
-namespace PersonalFinanceManager.Application.Utilities;
+﻿namespace PersonalFinanceManager.Application.Utilities;
 
 public static class EnumExtensions
 {

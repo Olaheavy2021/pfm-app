@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using PersonalFinanceManager.Application.Models;
-
-namespace PersonalFinanceManager.Application.Infrastructure.Database;
+﻿namespace PersonalFinanceManager.Application.Infrastructure.Database;
 
 public static class ConfigureDatabaseAndIdentity
 {

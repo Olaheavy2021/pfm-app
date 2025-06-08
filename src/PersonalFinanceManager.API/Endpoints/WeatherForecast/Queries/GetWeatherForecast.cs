@@ -1,10 +1,4 @@
-﻿using Asp.Versioning;
-using Carter;
-using JetBrains.Annotations;
-using MediatR;
-using PersonalFinanceManager.API.Endpoints.WeatherForecast.Model;
-
-namespace PersonalFinanceManager.API.Endpoints.WeatherForecast.Queries;
+﻿namespace PersonalFinanceManager.API.Endpoints.WeatherForecast.Queries;
 
 [UsedImplicitly]
 public class GetWeatherForecasts : ICarterModule

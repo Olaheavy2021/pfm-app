@@ -1,8 +1,4 @@
-﻿using Asp.Versioning;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-
-namespace PersonalFinanceManager.Application.Infrastructure.Versioning;
+﻿namespace PersonalFinanceManager.Application.Infrastructure.Versioning;
 
 public static class ConfigureVersioning
 {

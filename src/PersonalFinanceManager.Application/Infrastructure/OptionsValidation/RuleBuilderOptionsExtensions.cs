@@ -1,8 +1,4 @@
-﻿using System.Net;
-using FluentValidation;
-using JetBrains.Annotations;
-
-namespace PersonalFinanceManager.API.Infrastructure.Validation;
+﻿namespace PersonalFinanceManager.Application.Infrastructure.OptionsValidation;
 
 [UsedImplicitly]
 public static class RuleBuilderOptionsExtensions
