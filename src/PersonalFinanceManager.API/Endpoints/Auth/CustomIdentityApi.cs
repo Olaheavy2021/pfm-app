@@ -170,7 +170,8 @@ public static class CustomIdentityApiEndpointRouteBuilderExtensions
 
                 // Reject the /refresh attempt with a 401 if the token expired or the security stamp validation fails
                 if (
-                    refreshTicket?.Properties?.ExpiresUtc is not { } expiresUtc
+                    refreshTicket is null
+                    || refreshTicket.Properties?.ExpiresUtc is not { } expiresUtc
                     || timeProvider.GetUtcNow() >= expiresUtc
                     || await signInManager.ValidateSecurityStampAsync(refreshTicket.Principal)
                         is not TUser user
@@ -450,7 +451,7 @@ public static class CustomIdentityApiEndpointRouteBuilderExtensions
 
         accountGroup.MapGet(
             "/info",
-            async Task<Results<Ok<InfoResponse>, ValidationProblem, NotFound>> (
+            async Task<Results<Ok<object>, ValidationProblem, NotFound>> (
                 ClaimsPrincipal claimsPrincipal,
                 [FromServices] IServiceProvider sp
             ) =>
@@ -467,7 +468,7 @@ public static class CustomIdentityApiEndpointRouteBuilderExtensions
                     info.IsEmailConfirmed,
                     user.Name,
                 };
-                return TypedResults.Ok(await CreateInfoResponseAsync(user, userManager));
+                return TypedResults.Ok(data);
             }
         );
 
