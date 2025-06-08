@@ -1,0 +1,87 @@
+name: "CodeQL"
+
+permissions:
+  contents: read
+  security-events: write
+
+on:
+  push:
+    branches: 
+    - main
+  pull_request:
+    branches: 
+    - main
+
+env:
+  DOTNET_VERSION: '9.0.x'
+
+concurrency:
+  # Use github.run_id on main branch
+  # Use github.event.pull_request.number on pull requests, so it's unique per pull request
+  # Use github.ref on other branches, so it's unique per branch
+  group: ${{ github.workflow }}-${{ github.ref == 'refs/heads/main' && github.run_id || github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  analyze:
+
+    name: analyze
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: ['csharp']
+
+    steps:
+      - name: Checkout the Source Code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Install dependencies
+        run: dotnet restore
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+         languages: ${{ matrix.language }}
+         queries: security-and-quality
+         config:  |
+          paths-ignore:
+            - '**/*.g.cs'
+            - '**/*.feature.cs'
+          query-filters:
+            - exclude:
+                id: cs/useless-cast-to-self
+
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "language:${{ matrix.language }}"
+          output: sarif-results
+          upload: failure-only
+          cleanup-level: none
+      
+      - name: Filter Sarif
+        uses: advanced-security/filter-sarif@v1
+        with:
+          patterns: |
+            +**/*.c.cs
+            -**/*.g.cs
+            -**/*.feature.cs
+            -**/*.feature
+          input: sarif-results/csharp.sarif
+          output: sarif-results/csharp.sarif
+
+      - name: Upload Sarif
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: sarif-results/csharp.sarif
+    
