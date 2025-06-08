@@ -1,4 +1,6 @@
-﻿namespace PersonalFinanceManager.Application.Infrastructure.Database;
+﻿using PersonalFinanceManager.Application.Settings;
+
+namespace PersonalFinanceManager.Application.Infrastructure.Database;
 
 public class DBInitializer()
 {
@@ -6,6 +8,11 @@ public class DBInitializer()
     {
         using var scope = app.ApplicationServices.CreateScope();
         var logger = scope.ServiceProvider.GetRequiredService<ILogger>();
+        var authOptions = scope.ServiceProvider.GetRequiredService<IOptions<AuthOptions>>().Value;
+
+        logger.Information(authOptions.AdminName);
+        logger.Information(authOptions.AdminEmail);
+        logger.Information(authOptions.AdminUserName);
 
         try
         {
@@ -16,9 +23,9 @@ public class DBInitializer()
             {
                 var user = new ApplicationUser
                 {
-                    Name = "Admin",
-                    UserName = "admin@gmail.com",
-                    Email = "admin@gmail.com",
+                    Name = authOptions.AdminName,
+                    UserName = authOptions.AdminUserName,
+                    Email = authOptions.AdminEmail,
                     EmailConfirmed = true,
                     SecurityStamp = Guid.NewGuid().ToString(),
                 };
@@ -61,7 +68,7 @@ public class DBInitializer()
                 // Attempt to create admin user
                 var createUserResult = await userManager.CreateAsync(
                     user: user,
-                    password: "Admin@123"
+                    password: authOptions.AdminPassword
                 );
 
                 if (!createUserResult.Succeeded)

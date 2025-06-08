@@ -1,4 +1,6 @@
-﻿public sealed class BearerSecuritySchemeTransformer(
+﻿namespace PersonalFinanceManager.Application.Infrastructure;
+
+public sealed class BearerSecuritySchemeTransformer(
     Microsoft.AspNetCore.Authentication.IAuthenticationSchemeProvider authenticationSchemeProvider
 ) : IOpenApiDocumentTransformer
 {
