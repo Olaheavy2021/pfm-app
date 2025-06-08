@@ -1,6 +1,11 @@
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
 
+if (builder.Environment.IsDevelopment())
+{
+    config.AddUserSecrets<IApiMarker>();
+}
+
 Log.Logger.ConfigureSerilogBootstrapLogger();
 
 builder.AddServiceDefaults();

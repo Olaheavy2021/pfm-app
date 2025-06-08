@@ -8,6 +8,7 @@ public static class ServiceCollectionExtensions
     )
     {
         services
+            .AddApplicationOptions(config)
             .AddCustomCors()
             .AddVersioning()
             .AddMediatR([typeof(IApiMarker), typeof(IApplicationMarker)])
@@ -43,5 +44,18 @@ public static class ServiceCollectionExtensions
             [.. handlerAssemblyMarkerTypes.Select(t => t.Assembly)]
         );
         return services.AddCarter(assemblyCatalog);
+    }
+
+    public static IServiceCollection AddApplicationOptions(
+        this IServiceCollection services,
+        IConfiguration config
+    )
+    {
+        services
+            .AddOptions<AuthOptions>()
+            .Bind(config.GetSection(AuthOptions.GetSectionName()))
+            .ValidatedOptions();
+
+        return services;
     }
 }

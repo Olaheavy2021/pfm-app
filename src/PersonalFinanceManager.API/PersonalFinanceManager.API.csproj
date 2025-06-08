@@ -3,6 +3,7 @@
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>70ac9017-30f1-4246-b8a7-a832fa436711</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\PersonalFinanceManager.Application\PersonalFinanceManager.Application.csproj" />
