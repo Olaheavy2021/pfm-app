@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Text.Json;
+using AppHost;
 using PersonalFinanceManager.Test.Infrastructure;
 using Xunit;
 using Xunit.Abstractions;
@@ -83,6 +84,13 @@ public class AppHostTests(ITestOutputHelper testOutput)
                         });
                 }
             );
+
+            await app
+                .ResourceNotifications.WaitForResourceAsync(
+                    AppHostConstants.ApiServiceProject,
+                    KnownResourceStates.Running
+                )
+                .WaitAsync(TimeSpan.FromSeconds(30));
 
             foreach (var path in endpoints)
             {
