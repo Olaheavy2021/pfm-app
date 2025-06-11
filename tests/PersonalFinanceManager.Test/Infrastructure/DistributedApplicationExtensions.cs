@@ -4,6 +4,7 @@
 using System.Diagnostics;
 using System.Reflection;
 using System.Security.Cryptography;
+using Aspire.Hosting.Postgres;
 using Aspire.Hosting.Python;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -454,6 +455,24 @@ public static partial class DistributedApplicationExtensions
         }
 
         return migrationsApplied;
+    }
+
+    /// <summary>
+    /// Ensures all parameters in the application configuration have values set.
+    /// </summary>
+    public static TBuilder RemoveNotNeededResourcesForTesting<TBuilder>(this TBuilder builder)
+        where TBuilder : IDistributedApplicationTestingBuilder
+    {
+        var pgAdminResources = builder
+            .Resources.Where(r => r.GetType() == typeof(PgAdminContainerResource))
+            .ToList();
+
+        foreach (var pgAdmin in pgAdminResources)
+        {
+            builder.Resources.Remove(pgAdmin);
+        }
+
+        return builder;
     }
 
     private static bool DerivesFromDbContext(Type type)

@@ -31,6 +31,7 @@ internal static class DistributedApplicationTestFactory
 
         var builder = await DistributedApplicationTestingBuilder.CreateAsync(appHostType);
 
+        builder.RemoveNotNeededResourcesForTesting();
         builder.WithRandomParameterValues();
         builder.WithRandomVolumeNames();
         builder.WithContainersLifetime(ContainerLifetime.Session);
