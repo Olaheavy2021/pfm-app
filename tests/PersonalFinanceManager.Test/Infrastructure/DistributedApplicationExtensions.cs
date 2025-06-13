@@ -354,7 +354,7 @@ public static partial class DistributedApplicationExtensions
             .BuildServiceProvider();
         var httpClientFactory = services.GetRequiredService<IHttpClientFactory>();
 
-        var httpClient = httpClientFactory.CreateClient();
+        var httpClient = httpClientFactory.CreateClient(resourceName);
         httpClient.BaseAddress = app.GetEndpoint(resourceName, endpointName);
 
         return httpClient;
