@@ -71,7 +71,6 @@ public class AppHostTests(ITestOutputHelper testOutput)
                 resource,
                 null,
                 clientBuilder =>
-                {
                     clientBuilder
                         .ConfigureHttpClient(client => client.Timeout = Timeout.InfiniteTimeSpan)
                         .AddStandardResilienceHandler(resilience =>
@@ -81,8 +80,7 @@ public class AppHostTests(ITestOutputHelper testOutput)
                             resilience.Retry.MaxRetryAttempts = 30;
                             resilience.CircuitBreaker.SamplingDuration =
                                 resilience.AttemptTimeout.Timeout * 2;
-                        });
-                }
+                        })
             );
 
             await app
