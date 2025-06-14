@@ -1,8 +1,11 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System.Collections;
+using System.Reflection;
 using System.Text.Json;
 using AppHost;
+using k8s.Models;
 using PersonalFinanceManager.Test.Infrastructure;
 using Xunit;
 using Xunit.Abstractions;
@@ -43,6 +46,50 @@ public class AppHostTests(ITestOutputHelper testOutput)
         await using var app = await appHost.BuildAsync().WaitAsync(BuildStopTimeout);
 
         await app.StartAsync().WaitAsync(StartStopTimeout);
+        var applicationModel = app.Services.GetRequiredService<DistributedApplicationModel>();
+
+        var apiProject = projects.FirstOrDefault(p =>
+            string.Equals(
+                p.Name,
+                AppHostConstants.ApiServiceProject,
+                StringComparison.OrdinalIgnoreCase
+            )
+        );
+
+        var dcpAnnotation = apiProject!.Annotations.FirstOrDefault(a =>
+            a.GetType().Name.Contains("DcpInstancesAnnotation")
+        );
+
+        var projectResource = applicationModel
+            .Resources.OfType<ProjectResource>()
+            .FirstOrDefault(x => x.Name == AppHostConstants.ApiServiceProject);
+
+        string? proxyName = null;
+        if (dcpAnnotation != null)
+        {
+            var instancesProperty = dcpAnnotation
+                .GetType()
+                .GetProperty(
+                    "Instances",
+                    BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public
+                );
+            var instances = instancesProperty?.GetValue(dcpAnnotation) as IEnumerable;
+
+            if (instances != null)
+            {
+                foreach (object? instance in instances)
+                {
+                    var idProperty = instance.GetType().GetProperty("Id");
+                    var nameProperty = instance.GetType().GetProperty("Name");
+
+                    var id = idProperty?.GetValue(instance);
+                    var name = nameProperty?.GetValue(instance);
+                    proxyName = name?.ToString();
+                    Console.WriteLine($"Instance ID: {id}, Name: {name}");
+                }
+            }
+        }
+
         await app.WaitForResourcesAsync().WaitAsync(StartStopTimeout);
 
         if (testEndpoints.WaitForResources?.Count > 0)
@@ -52,6 +99,16 @@ public class AppHostTests(ITestOutputHelper testOutput)
             foreach (var (ResourceName, TargetState) in testEndpoints.WaitForResources)
             {
                 await app.WaitForResource(ResourceName, TargetState).WaitAsync(timeout);
+            }
+
+            if (proxyName is not null)
+            {
+                await app
+                    .ResourceNotifications.WaitForResourceAsync(
+                        proxyName,
+                        KnownResourceStates.Running
+                    )
+                    .WaitAsync(TimeSpan.FromMinutes(1));
             }
         }
 
@@ -82,13 +139,6 @@ public class AppHostTests(ITestOutputHelper testOutput)
                                 resilience.AttemptTimeout.Timeout * 2;
                         })
             );
-
-            await app
-                .ResourceNotifications.WaitForResourceAsync(
-                    AppHostConstants.ApiServiceProject,
-                    KnownResourceStates.Running
-                )
-                .WaitAsync(TimeSpan.FromSeconds(30));
 
             foreach (var path in endpoints)
             {

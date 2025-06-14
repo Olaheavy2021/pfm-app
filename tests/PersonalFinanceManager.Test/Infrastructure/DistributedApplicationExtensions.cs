@@ -5,6 +5,7 @@ using System.Collections;
 using System.Diagnostics;
 using System.Reflection;
 using System.Security.Cryptography;
+using AppHost;
 using Aspire.Hosting.ApplicationModel;
 using Aspire.Hosting.Postgres;
 using Aspire.Hosting.Python;
@@ -19,6 +20,8 @@ namespace PersonalFinanceManager.Test.Infrastructure;
 
 public static partial class DistributedApplicationExtensions
 {
+    public static string? ProxyName { get; set; }
+
     /// <summary>
     /// Ensures all parameters in the application configuration have values set.
     /// </summary>
@@ -153,11 +156,14 @@ public static partial class DistributedApplicationExtensions
     {
         var logger = app
             .Services.GetRequiredService<ILoggerFactory>()
-            .CreateLogger($"{nameof(PersonalFinanceManager.Test)}.{nameof(WaitForResourcesAsync)}");
+            .CreateLogger($"{nameof(Test)}.{nameof(WaitForResourcesAsync)}");
 
         targetStates ??= [KnownResourceStates.Running, .. KnownResourceStates.TerminalStates];
         var applicationModel = app.Services.GetRequiredService<DistributedApplicationModel>();
-        var projectResource = applicationModel.Resources.OfType<ProjectResource>().FirstOrDefault();
+
+        var projectResource = applicationModel
+            .Resources.OfType<ProjectResource>()
+            .FirstOrDefault(x => x.Name == AppHostConstants.ApiServiceProject);
 
         var resourceTasks = new Dictionary<string, Task<(string Name, string State)>>();
         foreach (var resource in applicationModel.Resources)
