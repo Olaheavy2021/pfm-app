@@ -1,6 +1,6 @@
 ﻿namespace AppHost;
 
-internal class AppHostConstants
+public class AppHostConstants
 {
     public const string PostgresServerBackingService = "postgres";
     public const string PfmDbBackingService = "pfmdb";

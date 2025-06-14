@@ -6,7 +6,7 @@ public class GetWeatherForecasts : ICarterModule
     public void AddRoutes(IEndpointRouteBuilder app)
     {
         app.MapGet(
-                "/WeatherForecasts",
+                "/weatherForecasts",
                 ([AsParameters] GetWeatherForecastsQuery query, IMediator mediator) =>
                     mediator.Send(query)
             )
@@ -15,7 +15,6 @@ public class GetWeatherForecasts : ICarterModule
             .WithTags(nameof(WeatherForecast))
             .WithDescription("Get weather forecasts")
             .WithSummary("Get weather forecasts")
-            .RequireAuthorization()
             .Produces<List<WeatherForecastResponse>>();
     }
 
