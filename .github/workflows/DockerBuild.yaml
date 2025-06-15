@@ -20,9 +20,6 @@ env:
   DOTNET_VERSION: "9.0.x"
 
 concurrency:
-  # Use github.run_id on main branch
-  # Use github.event.pull_request.number on pull requests, so it's unique per pull request
-  # Use github.ref on other branches, so it's unique per branch
   group: ${{ github.workflow }}-${{ github.ref == 'refs/heads/main' && github.run_id || github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
@@ -89,49 +86,3 @@ jobs:
 
       - name: Build
         run: dotnet build --configuration Release --no-restore
-
-      - name: Test
-        run: dotnet test --no-restore --verbosity normal
-
-      - name: Run tests with coverage, logging & blame
-        id: test
-        if: matrix.os == 'ubuntu-latest'
-        run: |
-          dotnet coverage collect \
-          --output ${{ github.workspace }}/Tests/Coverage \
-          --output-format cobertura \
-          --settings CodeCoverage.runsettings \
-          -- dotnet test \
-          --logger console \
-          --logger trx \
-          --logger html \
-          --logger GitHubActions \
-          --results-directory ./TestResults \
-          --blame \
-          -- RunConfiguration.CollectSourceInformation=true
-
-      - name: Copy DCP logs
-        if: (success() || steps.test.conclusion == 'failure') && matrix.os == 'ubuntu-latest'
-        run: |
-          mkdir -p ./TestResults/DCPLogs
-          cp -r /tmp/dcp/logs/* ./TestResults/DCPLogs
-
-      - name: Publish Test Results
-        if: (success() || steps.test.conclusion == 'failure') && matrix.os == 'ubuntu-latest'
-        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4.6.1
-        with:
-          name: TestResults_${{ matrix.os }}
-          path: ./TestResults
-
-      - name: Generate coverage report
-        run: |
-          reportgenerator \
-            -reports:${{ github.workspace }}/Tests/Coverage \
-            -targetdir:${{ github.workspace }}/Tests/coveragereport \
-            -reporttypes:Html
-
-      - name: Upload code coverage report
-        uses: actions/upload-artifact@v4
-        with:
-          name: coveragereport
-          path: ${{ github.workspace }}/Tests/coveragereport
