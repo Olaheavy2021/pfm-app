@@ -4,16 +4,15 @@ public sealed class IgnoreOnGitHubActionsFactAttribute : FactAttribute
 {
     public IgnoreOnGitHubActionsFactAttribute()
     {
-        if (!IsRunningOnGitHub())
+        if (IsRunningOnGitHub())
         {
-            return;
+            Skip = "Ignored on GitHub Actions Runner";
         }
-
-        Skip = "Ignored on GitHub Actions Runner";
     }
 
     public static bool IsRunningOnGitHub()
     {
+        //check if it is equals to true also
         return Environment.GetEnvironmentVariable("CI") != null;
     }
 }
