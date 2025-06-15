@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 
-namespace PersonalFinanceManager.Test.Infrastructure;
+namespace PersonalFinanceManager.PlaywrightTests.Infrastructure;
 
 internal static class PasswordGenerator
 {

@@ -8,6 +8,8 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Aspire.Hosting.Testing" Version="9.2.1" />
+    <PackageReference Include="Aspire.Hosting.NodeJs" Version="9.3.0" />
+    <PackageReference Include="Aspire.Hosting.Python" Version="9.3.0" />
     <PackageReference Include="coverlet.collector" Version="6.0.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -20,6 +22,9 @@
     </PackageReference>
     <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="9.0.5" />
     <PackageReference Include="Microsoft.Playwright" Version="1.52.0" />
+    <PackageReference Include="GitHubActionsTestLogger" Version="2.4.1" />
+    <PackageReference Include="Microsoft.Extensions.Diagnostics.Testing" Version="9.2.0" />
+    <PackageReference Include="MartinCostello.Logging.XUnit" Version="0.5.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\AppHost\AppHost.csproj" />

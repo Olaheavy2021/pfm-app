@@ -13,8 +13,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersonalFinanceManager.Appl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersonalFinanceManager.MigrationService", "src\PersonalFinanceManager.MigrationService\PersonalFinanceManager.MigrationService.csproj", "{B09EFA06-1A6F-ADCC-1731-7E1CDAF34871}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersonalFinanceManager.Test", "tests\PersonalFinanceManager.Test\PersonalFinanceManager.Test.csproj", "{1520DD2A-CB0F-4337-BADC-BEB75D5BB883}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersonalFinanceManager.PlaywrightTests", "tests\PersonalFinanceManager.PlaywrightTests\PersonalFinanceManager.PlaywrightTests.csproj", "{984B6DF1-A50B-4B3E-8CE8-ADF982AEFAA8}"
 EndProject
 Global
@@ -43,10 +41,6 @@ Global
 		{B09EFA06-1A6F-ADCC-1731-7E1CDAF34871}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B09EFA06-1A6F-ADCC-1731-7E1CDAF34871}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B09EFA06-1A6F-ADCC-1731-7E1CDAF34871}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1520DD2A-CB0F-4337-BADC-BEB75D5BB883}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1520DD2A-CB0F-4337-BADC-BEB75D5BB883}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1520DD2A-CB0F-4337-BADC-BEB75D5BB883}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1520DD2A-CB0F-4337-BADC-BEB75D5BB883}.Release|Any CPU.Build.0 = Release|Any CPU
 		{984B6DF1-A50B-4B3E-8CE8-ADF982AEFAA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{984B6DF1-A50B-4B3E-8CE8-ADF982AEFAA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{984B6DF1-A50B-4B3E-8CE8-ADF982AEFAA8}.Release|Any CPU.ActiveCfg = Release|Any CPU

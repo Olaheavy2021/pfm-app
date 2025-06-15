@@ -1,8 +1,9 @@
 using AppHost;
+using Xunit.Abstractions;
 
-namespace PersonalFinanceManager.PlaywrightTests;
+namespace PersonalFinanceManager.PlaywrightTests.Endpoints;
 
-public class IntegrationTests
+public class WeatherForecastTests()
 {
     [Fact]
     public async Task TestApiGetWeatherForecast()

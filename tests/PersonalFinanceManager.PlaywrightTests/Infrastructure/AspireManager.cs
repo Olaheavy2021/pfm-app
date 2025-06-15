@@ -1,4 +1,8 @@
 ﻿using Aspire.Hosting;
+using Microsoft.Extensions.Logging;
+using PersonalFinanceManager.Test.Infrastructure;
+using Xunit.Abstractions;
+using Xunit.Sdk;
 
 namespace PersonalFinanceManager.PlaywrightTests.Infrastructure;
 
@@ -10,6 +14,8 @@ public class AspireManager : IAsyncLifetime
     internal PlaywrightManager PlaywrightManager { get; } = new();
 
     internal DistributedApplication? App { get; private set; }
+
+    internal ITestOutputHelper? TestOutput { get; private set; }
 
     public async Task<DistributedApplication> ConfigureAsync<TEntryPoint>(
         string[]? args = null,
@@ -29,6 +35,24 @@ public class AspireManager : IAsyncLifetime
         );
 
         builder.Configuration["ASPIRE_ALLOW_UNSECURED_TRANSPORT"] = "true";
+        builder.RemoveNotNeededResourcesForTesting();
+        builder.WithRandomParameterValues();
+        builder.WithRandomVolumeNames();
+        builder.WithContainersLifetime(ContainerLifetime.Session);
+
+        builder.Services.AddLogging(logging =>
+        {
+            logging.ClearProviders();
+            logging.AddSimpleConsole();
+            logging.AddFakeLogging();
+            if (TestOutput is not null)
+            {
+                logging.AddXUnit(TestOutput);
+            }
+            logging.SetMinimumLevel(LogLevel.Trace);
+            logging.AddFilter("Aspire", LogLevel.Trace);
+            logging.AddFilter(builder.Environment.ApplicationName, LogLevel.Trace);
+        });
 
         configureBuilder?.Invoke(builder);
 
