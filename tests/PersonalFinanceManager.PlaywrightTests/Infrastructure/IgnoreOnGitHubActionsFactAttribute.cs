@@ -9,7 +9,7 @@ public sealed class IgnoreOnGitHubActionsFactAttribute : FactAttribute
             return;
         }
 
-        Skip = "Ignored on GitHub Actions";
+        Skip = "Ignored on GitHub Actions Runner";
     }
 
     public static bool IsRunningOnGitHub()
