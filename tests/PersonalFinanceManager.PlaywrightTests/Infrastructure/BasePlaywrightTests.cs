@@ -19,7 +19,7 @@ public abstract class BasePlaywrightTests : IClassFixture<AspireManager>, IAsync
     PlaywrightManager PlaywrightManager => AspireManager.PlaywrightManager;
     public string? DashboardUrl { get; private set; }
     public string DashboardLoginToken { get; private set; } = "";
-    public string BaseApiUrl { get; private set; }
+    public string? BaseApiUrl { get; private set; }
     private static readonly TimeSpan DefaultTimeout = TimeSpan.FromSeconds(30);
 
     private IBrowserContext? _context;
