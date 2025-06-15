@@ -1,4 +1,5 @@
-﻿using PersonalFinanceManager.Application.Settings;
+﻿using PersonalFinanceManager.Application.Data.Models;
+using PersonalFinanceManager.Application.Settings;
 
 namespace PersonalFinanceManager.Application.Infrastructure.Database;
 

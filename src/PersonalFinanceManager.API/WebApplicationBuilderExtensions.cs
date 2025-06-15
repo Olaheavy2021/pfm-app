@@ -1,4 +1,6 @@
-﻿namespace PersonalFinanceManager.API;
+﻿using PersonalFinanceManager.Application.Data.Models;
+
+namespace PersonalFinanceManager.API;
 
 public static class WebApplicationBuilderExtensions
 {
