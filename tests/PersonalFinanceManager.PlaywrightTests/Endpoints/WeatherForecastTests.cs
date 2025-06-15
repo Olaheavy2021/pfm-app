@@ -1,22 +1,39 @@
-using System.Net.Http.Json;
+using System.Text.Json;
+using AppHost;
 
 namespace PersonalFinanceManager.PlaywrightTests.Endpoints;
 
-public class WeatherForecastTests : BasePlaywrightTests
+public class WeatherForecastTests(AspireManager aspireManager) : BasePlaywrightTests(aspireManager)
 {
-    public WeatherForecastTests(AspireManager aspireManager)
-        : base(aspireManager) { }
+    private const string BaseWeatherForecastUrl = "api/v1/weatherForecasts";
 
-    [Fact]
-    public async Task TestApiGetWeatherForecast()
+    private readonly JsonSerializerOptions _jsonOptions = new()
+    {
+        PropertyNameCaseInsensitive = true,
+    };
+
+    [IgnoreOnGitHubActionsFact]
+    public async Task TestApiGetWeatherForecasts()
     {
         await SetupAsync();
-        var response = await HttpClient!.GetAsync("/api/v1/weatherForecasts");
-        response.EnsureSuccessStatusCode();
-        var weatherForecasts =
-            await response.Content.ReadFromJsonAsync<WeatherForecastResponse[]>();
-        Assert.NotNull(weatherForecasts);
-        Assert.True(weatherForecasts.Length > 0);
+
+        await InteractWithPageAsync(
+            AppHostConstants.ApiServiceProject,
+            async page =>
+            {
+                var response = await page.APIRequest.GetAsync(
+                    $"{BaseApiUrl}{BaseWeatherForecastUrl}"
+                );
+                var weatherForecastsJson = await response.TextAsync();
+                var weatherForecasts = JsonSerializer.Deserialize<List<WeatherForecastResponse>>(
+                    weatherForecastsJson,
+                    _jsonOptions
+                );
+                Assert.Equal(200, response.Status);
+                Assert.NotNull(weatherForecasts);
+                Assert.True(weatherForecasts.Count > 0);
+            }
+        );
     }
 
     public record WeatherForecastResponse(DateOnly Date, int TemperatureC, string? Summary);

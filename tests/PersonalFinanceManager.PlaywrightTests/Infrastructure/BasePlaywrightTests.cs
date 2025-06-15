@@ -1,6 +1,7 @@
 ﻿using AppHost;
 using Aspire.Hosting;
 using Microsoft.Playwright;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel.Client;
 
 namespace PersonalFinanceManager.PlaywrightTests.Infrastructure;
 
@@ -18,6 +19,7 @@ public abstract class BasePlaywrightTests : IClassFixture<AspireManager>, IAsync
     PlaywrightManager PlaywrightManager => AspireManager.PlaywrightManager;
     public string? DashboardUrl { get; private set; }
     public string DashboardLoginToken { get; private set; } = "";
+    public string BaseApiUrl { get; private set; }
     private static readonly TimeSpan DefaultTimeout = TimeSpan.FromSeconds(30);
 
     private IBrowserContext? _context;
@@ -96,6 +98,7 @@ public abstract class BasePlaywrightTests : IClassFixture<AspireManager>, IAsync
             .WaitAsync(TimeSpan.FromSeconds(30));
 
         HttpClient = app.CreateHttpClient(AppHostConstants.ApiServiceProject);
+        BaseApiUrl = HttpClient.BaseAddress?.ToString() ?? string.Empty;
     }
 
     private async Task<IPage> CreateNewPageAsync(Uri uri, ViewportSize? size = null)
@@ -107,9 +110,19 @@ public abstract class BasePlaywrightTests : IClassFixture<AspireManager>, IAsync
                 ColorScheme = ColorScheme.Dark,
                 ViewportSize = size,
                 BaseURL = uri.ToString(),
+                RecordVideoDir = "playwright-videos/",
             }
         );
 
+        await _context.Tracing.StartAsync(
+            new()
+            {
+                Title = "ApiMockTraces",
+                Screenshots = true,
+                Snapshots = true,
+                Sources = true,
+            }
+        );
         return await _context.NewPageAsync();
     }
 
@@ -119,6 +132,16 @@ public abstract class BasePlaywrightTests : IClassFixture<AspireManager>, IAsync
 
         if (_context is not null)
         {
+            await _context.Tracing.StopAsync(
+                new()
+                {
+                    Path = Path.Combine(
+                        Environment.CurrentDirectory,
+                        "playwright-traces",
+                        "api-mock-traces-with-video.zip"
+                    ),
+                }
+            );
             await _context.DisposeAsync();
         }
 

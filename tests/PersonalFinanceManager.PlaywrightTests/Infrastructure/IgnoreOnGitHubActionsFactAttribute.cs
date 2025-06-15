@@ -1,6 +1,4 @@
-﻿using Xunit;
-
-namespace PersonalFinanceManager.Test;
+﻿namespace PersonalFinanceManager.PlaywrightTests.Infrastructure;
 
 public sealed class IgnoreOnGitHubActionsFactAttribute : FactAttribute
 {

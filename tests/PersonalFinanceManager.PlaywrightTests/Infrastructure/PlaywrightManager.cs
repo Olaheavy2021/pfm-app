@@ -12,7 +12,6 @@ public class PlaywrightManager : IAsyncLifetime
     private static bool IsHeadless => IsDebugging is false;
 
     private IPlaywright? _playwright;
-
     internal IBrowser Browser { get; set; } = null!;
 
     public async Task InitializeAsync()
