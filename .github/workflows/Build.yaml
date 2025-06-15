@@ -10,6 +10,7 @@ on:
 
 env:
   DOTNET_VERSION: '9.0.x'
+  CI: true
 
 concurrency:
   # Use github.run_id on main branch
