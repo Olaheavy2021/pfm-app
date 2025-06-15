@@ -1,4 +1,5 @@
-﻿using Aspire.Hosting;
+﻿using AppHost;
+using Aspire.Hosting;
 using Microsoft.Playwright;
 
 namespace PersonalFinanceManager.PlaywrightTests.Infrastructure;
@@ -20,6 +21,7 @@ public abstract class BasePlaywrightTests : IClassFixture<AspireManager>, IAsync
     private static readonly TimeSpan DefaultTimeout = TimeSpan.FromSeconds(30);
 
     private IBrowserContext? _context;
+    public HttpClient? HttpClient;
 
     public Task<DistributedApplication> ConfigureAsync<TEntryPoint>(
         string[]? args = null,
@@ -83,6 +85,19 @@ public abstract class BasePlaywrightTests : IClassFixture<AspireManager>, IAsync
         }
     }
 
+    public async Task SetupAsync()
+    {
+        var app = await ConfigureAsync<Projects.AppHost>();
+        var resourceNotificationService =
+            app.Services.GetRequiredService<ResourceNotificationService>();
+
+        await resourceNotificationService
+            .WaitForResourceAsync(AppHostConstants.ApiServiceProject, KnownResourceStates.Running)
+            .WaitAsync(TimeSpan.FromSeconds(30));
+
+        HttpClient = app.CreateHttpClient(AppHostConstants.ApiServiceProject);
+    }
+
     private async Task<IPage> CreateNewPageAsync(Uri uri, ViewportSize? size = null)
     {
         _context = await PlaywrightManager.Browser.NewContextAsync(
@@ -106,5 +121,7 @@ public abstract class BasePlaywrightTests : IClassFixture<AspireManager>, IAsync
         {
             await _context.DisposeAsync();
         }
+
+        HttpClient?.Dispose();
     }
 }
