@@ -10,10 +10,6 @@ public class DBInitializer()
         var logger = scope.ServiceProvider.GetRequiredService<ILogger>();
         var authOptions = scope.ServiceProvider.GetRequiredService<IOptions<AuthOptions>>().Value;
 
-        logger.Information(authOptions.AdminName);
-        logger.Information(authOptions.AdminEmail);
-        logger.Information(authOptions.AdminUserName);
-
         try
         {
             var userManager = scope.ServiceProvider.GetService<UserManager<ApplicationUser>>();

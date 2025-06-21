@@ -22,7 +22,10 @@ public class Worker(
             using var scope = serviceProvider.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
+            var seeders = new ISeeder[] { new TransactionCategorySeeder() };
+
             await RunMigrationAsync(dbContext, cancellationToken);
+            await SeedAllAsync(dbContext, seeders, cancellationToken);
             logger.Information("Migration completed successfully.");
         }
         catch (Exception ex)
@@ -55,23 +58,26 @@ public class Worker(
         });
     }
 
-    //private static async Task SeedDataAsync(TicketContext dbContext, CancellationToken cancellationToken)
-    //{
-    //    SupportTicket firstTicket = new()
-    //    {
-    //        Title = "Test Ticket",
-    //        Description = "Default ticket, please ignore!",
-    //        Completed = true
-    //    };
+    private static async Task SeedAllAsync(
+        AppDbContext db,
+        IEnumerable<ISeeder> seeders,
+        CancellationToken ct
+    )
+    {
+        await db
+            .Database.CreateExecutionStrategy()
+            .ExecuteAsync(
+                async innerCt =>
+                {
+                    await using var tx = await db.Database.BeginTransactionAsync(innerCt);
 
-    //    var strategy = dbContext.Database.CreateExecutionStrategy();
-    //    await strategy.ExecuteAsync(async () =>
-    //    {
-    //        // Seed the database
-    //        await using var transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);
-    //        await dbContext.Tickets.AddAsync(firstTicket, cancellationToken);
-    //        await dbContext.SaveChangesAsync(cancellationToken);
-    //        await transaction.CommitAsync(cancellationToken);
-    //    });
-    //}
+                    foreach (var seeder in seeders)
+                        await seeder.SeedAsync(db, innerCt);
+
+                    await db.SaveChangesAsync(innerCt);
+                    await tx.CommitAsync(innerCt);
+                },
+                ct
+            );
+    }
 }

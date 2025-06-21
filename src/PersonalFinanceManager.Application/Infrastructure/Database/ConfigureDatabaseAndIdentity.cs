@@ -11,6 +11,8 @@ public static class ConfigureDatabaseAndIdentity
         services.AddSingleton<DBInitializer>();
 
         services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
+
+        services.AddScoped<ITransactionCategoryService, TransactionCategoryService>();
         return services;
     }
 

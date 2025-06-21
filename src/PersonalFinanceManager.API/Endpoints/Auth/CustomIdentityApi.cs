@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Options;
+using PersonalFinanceManager.Application.Data.Models;
 
 namespace PersonalFinanceManager.API.Endpoints.Auth;
 

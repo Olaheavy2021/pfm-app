@@ -29,6 +29,8 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\AppHost\AppHost.csproj" />
+    <ProjectReference Include="..\..\src\PersonalFinanceManager.API\PersonalFinanceManager.API.csproj" />
+    <ProjectReference Include="..\..\src\PersonalFinanceManager.Application\PersonalFinanceManager.Application.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Using Include="System.Net" />

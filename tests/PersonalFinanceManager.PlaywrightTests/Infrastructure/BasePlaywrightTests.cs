@@ -1,7 +1,6 @@
 ﻿using AppHost;
 using Aspire.Hosting;
 using Microsoft.Playwright;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel.Client;
 
 namespace PersonalFinanceManager.PlaywrightTests.Infrastructure;
 
@@ -90,6 +89,7 @@ public abstract class BasePlaywrightTests : IClassFixture<AspireManager>, IAsync
     public async Task SetupAsync()
     {
         var app = await ConfigureAsync<Projects.AppHost>();
+
         var resourceNotificationService =
             app.Services.GetRequiredService<ResourceNotificationService>();
 

@@ -1,4 +1,4 @@
-﻿namespace PersonalFinanceManager.Application.Models;
+﻿namespace PersonalFinanceManager.Application.Data.Models;
 
 public class ApplicationUser : IdentityUser
 {

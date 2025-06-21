@@ -5,8 +5,6 @@ namespace PersonalFinanceManager.PlaywrightTests.Endpoints;
 
 public class WeatherForecastTests(AspireManager aspireManager) : BasePlaywrightTests(aspireManager)
 {
-    private const string BaseWeatherForecastUrl = "api/v1/weatherForecasts";
-
     private readonly JsonSerializerOptions _jsonOptions = new()
     {
         PropertyNameCaseInsensitive = true,
@@ -22,7 +20,7 @@ public class WeatherForecastTests(AspireManager aspireManager) : BasePlaywrightT
             async page =>
             {
                 var response = await page.APIRequest.GetAsync(
-                    $"{BaseApiUrl}{BaseWeatherForecastUrl}"
+                    $"{BaseApiUrl}{TestConstants.API_WEATHER_FORECAST_ENDPOINT}"
                 );
                 var weatherForecastsJson = await response.TextAsync();
                 var weatherForecasts = JsonSerializer.Deserialize<List<WeatherForecastResponse>>(
