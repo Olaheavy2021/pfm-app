@@ -10,7 +10,7 @@ public static class WebApplicationBuilderExtensions
         app.UseCommonExceptionHandler();
         app.UseCors(AppConstants.CorsPolicy);
         app.NewVersionedApi()
-            .MapGroup("/api/auth/v{version:apiVersion}")
+            .MapGroup("/api/v{version:apiVersion}/auth/")
             .WithTags("Auth")
             .MapCustomIdentityApi<ApplicationUser>();
         app.NewVersionedApi().MapGroup("/api/v{version:apiVersion}").MapCarter();

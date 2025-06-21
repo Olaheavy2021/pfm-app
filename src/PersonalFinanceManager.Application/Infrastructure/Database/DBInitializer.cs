@@ -1,5 +1,4 @@
-﻿using PersonalFinanceManager.Application.Data.Models;
-using PersonalFinanceManager.Application.Settings;
+﻿using PersonalFinanceManager.Application.Settings;
 
 namespace PersonalFinanceManager.Application.Infrastructure.Database;
 
@@ -10,10 +9,6 @@ public class DBInitializer()
         using var scope = app.ApplicationServices.CreateScope();
         var logger = scope.ServiceProvider.GetRequiredService<ILogger>();
         var authOptions = scope.ServiceProvider.GetRequiredService<IOptions<AuthOptions>>().Value;
-
-        logger.Information(authOptions.AdminName);
-        logger.Information(authOptions.AdminEmail);
-        logger.Information(authOptions.AdminUserName);
 
         try
         {

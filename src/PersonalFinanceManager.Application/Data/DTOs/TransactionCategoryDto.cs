@@ -1,6 +1,4 @@
-﻿using PersonalFinanceManager.Application.Data.Models;
-
-namespace PersonalFinanceManager.Application.Data.DTOs;
+﻿namespace PersonalFinanceManager.Application.Data.DTOs;
 
 public record UpsertTransactionCategoryDto(
     string Name,

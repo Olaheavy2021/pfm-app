@@ -1,8 +1,9 @@
 ﻿using Aspire.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using PersonalFinanceManager.API;
 using PersonalFinanceManager.Test.Infrastructure;
 using Xunit.Abstractions;
-using Xunit.Sdk;
 
 namespace PersonalFinanceManager.PlaywrightTests.Infrastructure;
 
@@ -65,7 +66,6 @@ public class AspireManager : IAsyncLifetime
 
     public async Task InitializeAsync()
     {
-        // Initialization logic here
         await PlaywrightManager.InitializeAsync();
     }
 

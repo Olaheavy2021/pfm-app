@@ -6,9 +6,12 @@ public class GetTransactionCategory : ICarterModule
     public void AddRoutes(IEndpointRouteBuilder app)
     {
         app.MapGet(
-                "/transactionCategories/{id}",
-                ([AsParameters] Guid id, IMediator mediator, CancellationToken ct) =>
-                    mediator.Send(new GetTransactionCategoryQuery(id), ct)
+                "/transactionCategories/{Id}",
+                (
+                    [AsParameters] GetTransactionCategoryQuery query,
+                    IMediator mediator,
+                    CancellationToken ct
+                ) => mediator.Send(query, ct)
             )
             .HasApiVersion(new ApiVersion(1))
             .WithName(nameof(GetTransactionCategory))
@@ -18,7 +21,20 @@ public class GetTransactionCategory : ICarterModule
             .Produces<TransactionCategoryDto>();
     }
 
+    [UsedImplicitly]
     public record GetTransactionCategoryQuery(Guid Id) : IRequest<IResult>;
+
+    [UsedImplicitly]
+    public class GetTransactionCategoryQueryValidator
+        : AbstractValidator<GetTransactionCategoryQuery>
+    {
+        public GetTransactionCategoryQueryValidator()
+        {
+            RuleFor(x => x.Id)
+                .NotEmpty()
+                .WithMessage("The transaction category ID must not be empty.");
+        }
+    }
 
     [UsedImplicitly]
     public class GetTransactionCategoryQueryHandler(ITransactionCategoryService service)

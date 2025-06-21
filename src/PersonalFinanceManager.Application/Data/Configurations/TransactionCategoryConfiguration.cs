@@ -1,6 +1,4 @@
-﻿using PersonalFinanceManager.Application.Data.Models;
-
-namespace PersonalFinanceManager.Application.Data.Configurations;
+﻿namespace PersonalFinanceManager.Application.Data.Configurations;
 
 internal class TransactionCategoryConfiguration : IEntityTypeConfiguration<TransactionCategory>
 {
