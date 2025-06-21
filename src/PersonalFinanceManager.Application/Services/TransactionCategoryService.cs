@@ -47,6 +47,7 @@ public class TransactionCategoryService(
 
         var category = await dbContext
             .TransactionCategories.AsNoTracking()
+            .Include(t => t.TransactionTypes)
             .Select(category => mapper.ToDto(category))
             .ToListAsync(cancellationToken: cancellationToken);
 
@@ -60,6 +61,7 @@ public class TransactionCategoryService(
     {
         var category = await dbContext
             .TransactionCategories.AsNoTracking()
+            .Include(t => t.TransactionTypes)
             .FirstOrDefaultAsync(m => m.Id == id, cancellationToken: cancellationToken);
 
         if (category == null)

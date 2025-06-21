@@ -11,6 +11,8 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
 
     public DbSet<TransactionCategory> TransactionCategories { get; set; }
 
+    public DbSet<TransactionType> TransactionTypes { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(IApplicationMarker).Assembly);

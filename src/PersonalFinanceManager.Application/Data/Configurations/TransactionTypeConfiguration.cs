@@ -1,10 +1,10 @@
 ﻿namespace PersonalFinanceManager.Application.Data.Configurations;
 
-internal class TransactionCategoryConfiguration : IEntityTypeConfiguration<TransactionCategory>
+internal class TransactionTypeConfiguration : IEntityTypeConfiguration<TransactionType>
 {
-    public void Configure(EntityTypeBuilder<TransactionCategory> builder)
+    public void Configure(EntityTypeBuilder<TransactionType> builder)
     {
-        builder.ToTable("TransactionCategories");
+        builder.ToTable("TransactionTypes");
 
         builder.HasKey(m => m.Id);
 
@@ -13,13 +13,14 @@ internal class TransactionCategoryConfiguration : IEntityTypeConfiguration<Trans
         builder.Property(m => m.Status).IsRequired();
         builder.Property(m => m.Created).IsRequired().ValueGeneratedOnAdd();
         builder.Property(m => m.LastModified).IsRequired().ValueGeneratedOnUpdate();
+        builder.Property(m => m.TransactionCategoryId).IsRequired();
 
         builder.HasIndex(m => m.Name);
 
-        builder
-            .HasMany(tc => tc.TransactionTypes)
-            .WithOne(tt => tt.TransactionCategory)
-            .HasForeignKey(tt => tt.TransactionCategoryId)
-            .OnDelete(DeleteBehavior.Restrict);
+        //builder
+        //    .HasOne(m => m.TransactionCategory)
+        //    .WithMany()
+        //    .HasForeignKey(m => m.TransactionCategoryId)
+        //    .OnDelete(DeleteBehavior.Restrict);
     }
 }

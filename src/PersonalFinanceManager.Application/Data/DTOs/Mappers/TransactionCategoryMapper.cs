@@ -1,6 +1,4 @@
-﻿using PersonalFinanceManager.Application.Data.Models;
-
-namespace PersonalFinanceManager.Application.Data.Mappers;
+﻿namespace PersonalFinanceManager.Application.Data.Mappers;
 
 [Mapper]
 public partial class TransactionCategoryMapper
