@@ -21,7 +21,9 @@ internal class TransactionTypeService(
         await dbContext.TransactionTypes.AddAsync(transactionType, cancellationToken);
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        return Result.Ok(new TransactionTypeMapper().ToDto(transactionType));
+        var createdType = await GetByIdAsync(transactionType.Id);
+
+        return Result.Ok(createdType.Value);
     }
 
     public async Task<Result<IEnumerable<TransactionTypeDto>>> GetAllAsync(
