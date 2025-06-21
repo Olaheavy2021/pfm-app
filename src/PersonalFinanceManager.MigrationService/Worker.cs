@@ -22,7 +22,11 @@ public class Worker(
             using var scope = serviceProvider.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
-            var seeders = new ISeeder[] { new TransactionCategorySeeder() };
+            var seeders = new ISeeder[]
+            {
+                new TransactionCategorySeeder(),
+                new TransactionTypeSeeder(),
+            };
 
             await RunMigrationAsync(dbContext, cancellationToken);
             await SeedAllAsync(dbContext, seeders, cancellationToken);

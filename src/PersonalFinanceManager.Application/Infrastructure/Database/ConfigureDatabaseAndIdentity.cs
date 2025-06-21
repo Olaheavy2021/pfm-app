@@ -13,6 +13,7 @@ public static class ConfigureDatabaseAndIdentity
         services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
 
         services.AddScoped<ITransactionCategoryService, TransactionCategoryService>();
+        services.AddScoped<ITransactionTypeService, TransactionTypeService>();
         return services;
     }
 

@@ -11,7 +11,6 @@ public interface ITransactionCategoryService
         UpsertTransactionCategoryDto dto,
         CancellationToken cancellationToken = default
     );
-    Task<Result> DeleteAsync(Guid id, CancellationToken cancellationToken = default);
     Task<Result<TransactionCategoryDto>> GetByIdAsync(
         Guid id,
         CancellationToken cancellationToken = default

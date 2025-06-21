@@ -10,45 +10,75 @@ internal class TransactionTypeService(
         CancellationToken cancellationToken = default
     )
     {
-        throw new NotImplementedException();
-        //await transactionTypeValidator.ValidateAndThrowAsync(command, cancellationToken);
+        await transactionTypeValidator.ValidateAndThrowAsync(command, cancellationToken);
 
-        //var transactionType = TransactionType.Create(
-        //    command.Name,
-        //    command.Description,
-        //    command.TransactionCategoryId
-        //);
+        var transactionType = TransactionType.Create(
+            command.Name,
+            command.Description,
+            command.TransactionCategoryId
+        );
 
-        //await dbContext.TransactionTypes.AddAsync(transactionType, cancellationToken);
-        //await dbContext.SaveChangesAsync(cancellationToken);
+        await dbContext.TransactionTypes.AddAsync(transactionType, cancellationToken);
+        await dbContext.SaveChangesAsync(cancellationToken);
+
+        return Result.Ok(new TransactionTypeMapper().ToDto(transactionType));
     }
 
-    public Task<Result> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<Result<IEnumerable<TransactionTypeDto>>> GetAllAsync(
+    public async Task<Result<IEnumerable<TransactionTypeDto>>> GetAllAsync(
         CancellationToken cancellationToken = default
     )
     {
-        throw new NotImplementedException();
+        var mapper = new TransactionTypeMapper();
+
+        var types = await dbContext
+            .TransactionTypes.AsNoTracking()
+            .Include(t => t.TransactionCategory)
+            .Select(type => mapper.ToDto(type))
+            .ToListAsync(cancellationToken: cancellationToken);
+
+        return Result.Ok(types.AsEnumerable());
     }
 
-    public Task<Result<TransactionTypeDto>> GetByIdAsync(
+    public async Task<Result<TransactionTypeDto>> GetByIdAsync(
         Guid id,
         CancellationToken cancellationToken = default
     )
     {
-        throw new NotImplementedException();
+        var transactionType = await dbContext
+            .TransactionTypes.AsNoTracking()
+            .Include(t => t.TransactionCategory)
+            .FirstOrDefaultAsync(m => m.Id == id, cancellationToken: cancellationToken);
+
+        if (transactionType == null)
+            return Result.Fail(new Error($"Invalid Transaction Type Id - {id}"));
+
+        var mapper = new TransactionTypeMapper();
+        var typeDto = mapper.ToDto(transactionType);
+
+        return Result.Ok(typeDto);
     }
 
-    public Task<Result> UpdateAsync(
+    public async Task<Result> UpdateAsync(
         Guid id,
-        UpsertTransactionTypeDto dto,
+        UpsertTransactionTypeDto command,
         CancellationToken cancellationToken = default
     )
     {
-        throw new NotImplementedException();
+        var typeToUpdate = await dbContext.TransactionTypes.FindAsync(
+            [id],
+            cancellationToken: cancellationToken
+        );
+
+        if (typeToUpdate is null)
+            return Result.Fail(new Error($"Invalid TransactionType Id - {id}"));
+
+        typeToUpdate.Update(
+            command.Name,
+            command.Description,
+            command.Status,
+            command.TransactionCategoryId
+        );
+        await dbContext.SaveChangesAsync(cancellationToken);
+        return Result.Ok();
     }
 }

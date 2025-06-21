@@ -14,7 +14,7 @@ internal class TransactionCategoryConfiguration : IEntityTypeConfiguration<Trans
         builder.Property(m => m.Created).IsRequired().ValueGeneratedOnAdd();
         builder.Property(m => m.LastModified).IsRequired().ValueGeneratedOnUpdate();
 
-        builder.HasIndex(m => m.Name);
+        builder.HasIndex(m => m.Name).IsUnique();
 
         builder
             .HasMany(tc => tc.TransactionTypes)
