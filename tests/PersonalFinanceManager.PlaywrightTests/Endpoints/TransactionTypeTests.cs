@@ -116,4 +116,64 @@ public class TransactionTypeTests(AspireManager aspireManager) : BasePlaywrightT
             }
         );
     }
+
+    [IgnoreOnGitHubActionsFact]
+    public async Task TestApiUpdateTransactionType()
+    {
+        await SetupAsync();
+        await InteractWithPageAsync(
+            AppHostConstants.ApiServiceProject,
+            async page =>
+            {
+                var transactionTypes = await TransactionTypeHelper.GetTransactionTypesAsync(
+                    page,
+                    BaseApiUrl!,
+                    _jsonOptions
+                );
+
+                var token = await AuthHelper.AuthenticateAsync(page, BaseApiUrl!, _jsonOptions);
+
+                var data = new Dictionary<string, object>()
+                {
+                    { "Id", transactionTypes[0].Id },
+                    { "Name", "Updated Test Transaction Type" },
+                    { "Description", "This is an updated test transaction type" },
+                    { "Status", 0 },
+                    { "TransactionCategoryId", transactionTypes[0].TransactionCategoryId },
+                };
+                var headers = new Dictionary<string, string>
+                {
+                    { "Authorization", $"Bearer {token}" },
+                };
+
+                var updatedResponse = await page.APIRequest.PutAsync(
+                    $"{BaseApiUrl}{TestConstants.API_TRANSACTION_TYPES_ENDPOINT}/{transactionTypes[0].Id}",
+                    new() { DataObject = data, Headers = headers }
+                );
+                Assert.NotNull(updatedResponse);
+                Assert.Equal(204, updatedResponse.Status);
+
+                var getResponse = await page.APIRequest.GetAsync(
+                    $"{BaseApiUrl}{TestConstants.API_TRANSACTION_TYPES_ENDPOINT}/{transactionTypes[0].Id}"
+                );
+                var transactionTypeJson = await getResponse.TextAsync();
+                var updatedTransactionType = JsonSerializer.Deserialize<TransactionTypeDto>(
+                    transactionTypeJson,
+                    _jsonOptions
+                );
+                Assert.Equal(200, getResponse.Status);
+                Assert.NotNull(updatedTransactionType);
+                Assert.Equal("Updated Test Transaction Type", updatedTransactionType.Name);
+                Assert.Equal(
+                    "This is an updated test transaction type",
+                    updatedTransactionType.Description
+                );
+                Assert.Equal(EntityEnum.Status.Disabled, updatedTransactionType.Status);
+                Assert.Equal(
+                    transactionTypes[0].TransactionCategoryId,
+                    updatedTransactionType.TransactionCategoryId
+                );
+            }
+        );
+    }
 }

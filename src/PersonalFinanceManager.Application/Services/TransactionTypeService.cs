@@ -21,7 +21,7 @@ internal class TransactionTypeService(
         await dbContext.TransactionTypes.AddAsync(transactionType, cancellationToken);
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        var createdType = await GetByIdAsync(transactionType.Id);
+        var createdType = await GetByIdAsync(transactionType.Id, cancellationToken);
 
         return Result.Ok(createdType.Value);
     }
