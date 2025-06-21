@@ -76,9 +76,11 @@ public class Worker(
                     await using var tx = await db.Database.BeginTransactionAsync(innerCt);
 
                     foreach (var seeder in seeders)
+                    {
                         await seeder.SeedAsync(db, innerCt);
+                        await db.SaveChangesAsync(innerCt);
+                    }
 
-                    await db.SaveChangesAsync(innerCt);
                     await tx.CommitAsync(innerCt);
                 },
                 ct

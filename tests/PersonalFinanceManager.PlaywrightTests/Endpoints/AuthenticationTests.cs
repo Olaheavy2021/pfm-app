@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using AppHost;
 using Microsoft.AspNetCore.Authentication.BearerToken;
+using PersonalFinanceManager.PlaywrightTests.Helpers;
 
 namespace PersonalFinanceManager.PlaywrightTests.Endpoints;
 
@@ -12,30 +13,15 @@ public class AuthenticationTests(AspireManager aspireManager) : BasePlaywrightTe
     };
 
     [IgnoreOnGitHubActionsFact]
-    public async Task TestApiGetAuthenticationStatus()
+    public async Task TestApiLogin()
     {
         await SetupAsync();
         await InteractWithPageAsync(
             AppHostConstants.ApiServiceProject,
             async page =>
             {
-                var data = new Dictionary<string, object>()
-                {
-                    { "Email", "admin@gmail.com" },
-                    { "Password", "Admin@123" },
-                };
-
-                var response = await page.APIRequest.PostAsync(
-                    $"{BaseApiUrl}{TestConstants.API_AUTH_LOGIN_ENDPOINT}",
-                    new() { DataObject = data }
-                );
-                var authStatusJson = await response.TextAsync();
-                var authStatus = JsonSerializer.Deserialize<AccessTokenResponse>(
-                    authStatusJson,
-                    _jsonOptions
-                );
-                Assert.Equal(200, response.Status);
-                Assert.NotNull(authStatus);
+                var token = await AuthHelper.AuthenticateAsync(page, BaseApiUrl!, _jsonOptions);
+                Assert.NotNull(token);
             }
         );
     }

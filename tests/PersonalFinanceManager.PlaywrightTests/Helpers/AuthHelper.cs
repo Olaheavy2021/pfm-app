@@ -29,10 +29,8 @@ internal class AuthHelper
             jsonOptions
         );
 
-        if (authStatus?.AccessToken is null)
-        {
-            throw new InvalidOperationException("Authentication failed: access token is null");
-        }
+        Assert.Equal(200, loginResponse.Status);
+        Assert.NotNull(authStatus);
 
         return authStatus.AccessToken;
     }

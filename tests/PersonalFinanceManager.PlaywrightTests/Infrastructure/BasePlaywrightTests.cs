@@ -1,6 +1,7 @@
 ﻿using AppHost;
 using Aspire.Hosting;
 using Microsoft.Playwright;
+using PersonalFinanceManager.Test.Infrastructure;
 
 namespace PersonalFinanceManager.PlaywrightTests.Infrastructure;
 
@@ -89,14 +90,6 @@ public abstract class BasePlaywrightTests : IClassFixture<AspireManager>, IAsync
     public async Task SetupAsync()
     {
         var app = await ConfigureAsync<Projects.AppHost>();
-
-        var resourceNotificationService =
-            app.Services.GetRequiredService<ResourceNotificationService>();
-
-        await resourceNotificationService
-            .WaitForResourceAsync(AppHostConstants.ApiServiceProject, KnownResourceStates.Running)
-            .WaitAsync(TimeSpan.FromSeconds(30));
-
         HttpClient = app.CreateHttpClient(AppHostConstants.ApiServiceProject);
         BaseApiUrl = HttpClient.BaseAddress?.ToString() ?? string.Empty;
     }
