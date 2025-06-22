@@ -25,11 +25,19 @@ var migrationService = builder
     .WithReference(pfmDb)
     .WaitFor(pfmDb);
 
-builder
+var apiService = builder
     .AddProject<Projects.PersonalFinanceManager_API>(AppHostConstants.ApiServiceProject)
     .WithReference(pfmDb)
     .WaitFor(pfmDb)
     .WaitFor(migrationService);
+
+builder
+    .AddNpmApp(AppHostConstants.FrontendProject, "../PersonalFinanceManager.Frontend")
+    .WithReference(apiService)
+    .WaitFor(apiService)
+    .WithHttpEndpoint(port: 3039, targetPort: 3039, isProxied: false)
+    .WithExternalHttpEndpoints()
+    .PublishAsDockerFile();
 
 /*Projects*/
 

@@ -1,6 +1,5 @@
 ﻿using System.Text.Json;
 using AppHost;
-using Microsoft.AspNetCore.Authentication.BearerToken;
 using PersonalFinanceManager.PlaywrightTests.Helpers;
 
 namespace PersonalFinanceManager.PlaywrightTests.Endpoints;

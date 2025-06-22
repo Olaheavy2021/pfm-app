@@ -8,9 +8,9 @@
     <UserSecretsId>7e3e33c0-a80b-413f-ab1a-15f483525df7</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Aspire.Hosting.Testing" Version="9.2.1" />
-    <PackageReference Include="Aspire.Hosting.NodeJs" Version="9.3.0" />
-    <PackageReference Include="Aspire.Hosting.Python" Version="9.3.0" />
+    <PackageReference Include="Aspire.Hosting.Testing" Version="9.3.1" />
+    <PackageReference Include="Aspire.Hosting.NodeJs" Version="9.3.1" />
+    <PackageReference Include="Aspire.Hosting.Python" Version="9.3.1" />
     <PackageReference Include="coverlet.collector" Version="6.0.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
