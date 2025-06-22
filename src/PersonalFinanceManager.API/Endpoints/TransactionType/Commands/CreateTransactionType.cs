@@ -41,7 +41,7 @@ public class CreateTransactionType : ICarterModule
                 .NotEmpty()
                 .WithMessage("The transaction type name must not be empty.")
                 .MaximumLength(30)
-                .WithMessage("The transaction type name must not exceed 100 characters.");
+                .WithMessage("The transaction type name must not exceed 30 characters.");
             RuleFor(x => x.Description)
                 .NotEmpty()
                 .WithMessage("The transaction type description must not be empty.")
