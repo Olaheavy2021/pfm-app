@@ -87,10 +87,10 @@ public abstract class BasePlaywrightTests : IClassFixture<AspireManager>, IAsync
         }
     }
 
-    public async Task SetupAsync()
+    public async Task SetupAsync(string resourceName = AppHostConstants.ApiServiceProject)
     {
         var app = await ConfigureAsync<Projects.AppHost>();
-        HttpClient = app.CreateHttpClient(AppHostConstants.ApiServiceProject);
+        HttpClient = app.CreateHttpClient(resourceName);
         BaseApiUrl = HttpClient.BaseAddress?.ToString() ?? string.Empty;
     }
 

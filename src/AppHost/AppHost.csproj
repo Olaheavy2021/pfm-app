@@ -9,17 +9,32 @@
     <UserSecretsId>afe1db59-8595-4a48-aa44-5a7c5d6e3c07</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Aspire.Hosting.AppHost" Version="9.3.0" />
+    <PackageReference Include="Aspire.Hosting.AppHost" Version="9.3.1" />
     <PackageReference Include="CSharpier.MsBuild" Version="1.0.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Aspire.Hosting.NodeJs" Version="9.3.0" />
-    <PackageReference Include="Aspire.Hosting.PostgreSQL" Version="9.3.0" />
+    <PackageReference Include="Aspire.Hosting.NodeJs" Version="9.3.1" />
+    <PackageReference Include="Aspire.Hosting.PostgreSQL" Version="9.3.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PersonalFinanceManager.MigrationService\PersonalFinanceManager.MigrationService.csproj" />
     <ProjectReference Include="..\PersonalFinanceManager.API\PersonalFinanceManager.API.csproj" />
-    <ProjectReference Include="..\PersonalFinanceManager.MigrationService\PersonalFinanceManager.MigrationService.csproj" />
   </ItemGroup>
+  <Target Name="RestoreNpm" BeforeTargets="Build" Condition=" '$(DesignTimeBuild)' != 'true' ">
+    <ItemGroup>
+      <PackageJsons Include="..\*\package.json" />
+    </ItemGroup>
+    <!-- Install npm packages if node_modules is missing -->
+    <Message
+      Importance="Normal"
+      Text="Installing npm packages for %(PackageJsons.RelativeDir)"
+      Condition="!Exists('%(PackageJsons.RootDir)%(PackageJsons.Directory)/node_modules')"
+    />
+    <Exec
+      Command="npm install"
+      WorkingDirectory="%(PackageJsons.RootDir)%(PackageJsons.Directory)"
+      Condition="!Exists('%(PackageJsons.RootDir)%(PackageJsons.Directory)/node_modules')"
+    />
+  </Target>
 </Project>

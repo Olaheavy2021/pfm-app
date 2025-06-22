@@ -7,4 +7,5 @@ public class AppHostConstants
     public const string PfmDbVolumeBackingService = "postgres_pfmdb_datavolume";
     public const string MigrationServiceProject = "migrationservice";
     public const string ApiServiceProject = "apiservice";
+    public const string FrontendProject = "frontend";
 }
