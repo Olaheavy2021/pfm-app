@@ -23,22 +23,6 @@ public class TransactionCategoryService(
         return Result.Ok(dto);
     }
 
-    public async Task<Result> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
-    {
-        var categoryToDelete = await dbContext.TransactionCategories.FindAsync(
-            [id],
-            cancellationToken: cancellationToken
-        );
-        if (categoryToDelete != null)
-        {
-            dbContext.TransactionCategories.Remove(categoryToDelete);
-            await dbContext.SaveChangesAsync(cancellationToken);
-            return Result.Ok();
-        }
-
-        return Result.Fail(new Error($"Invalid Movie Id - {id}"));
-    }
-
     public async Task<Result<IEnumerable<TransactionCategoryDto>>> GetAllAsync(
         CancellationToken cancellationToken = default
     )
@@ -65,7 +49,7 @@ public class TransactionCategoryService(
             .FirstOrDefaultAsync(m => m.Id == id, cancellationToken: cancellationToken);
 
         if (category == null)
-            return Result.Fail(new Error($"Invalid Movie Id - {id}"));
+            return Result.Fail(new Error($"Invalid Category Id - {id}"));
 
         var mapper = new TransactionCategoryMapper();
         var categoryDto = mapper.ToDto(category);

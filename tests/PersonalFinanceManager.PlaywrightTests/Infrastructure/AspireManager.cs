@@ -1,7 +1,5 @@
 ﻿using Aspire.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using PersonalFinanceManager.API;
 using PersonalFinanceManager.Test.Infrastructure;
 using Xunit.Abstractions;
 
@@ -59,7 +57,8 @@ public class AspireManager : IAsyncLifetime
 
         App = await builder.BuildAsync();
 
-        await App.StartAsync();
+        await App.StartAsync().WaitAsync(StartStopTimeout);
+        await App.WaitForResourcesAsync().WaitAsync(StartStopTimeout);
 
         return App;
     }
@@ -75,4 +74,7 @@ public class AspireManager : IAsyncLifetime
 
         await (App?.DisposeAsync() ?? ValueTask.CompletedTask);
     }
+
+    private static readonly TimeSpan BuildStopTimeout = TimeSpan.FromSeconds(60);
+    private static readonly TimeSpan StartStopTimeout = TimeSpan.FromSeconds(120);
 }

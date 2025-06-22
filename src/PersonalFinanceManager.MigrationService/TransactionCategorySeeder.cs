@@ -6,11 +6,15 @@ public class TransactionCategorySeeder : ISeeder
 {
     public async Task SeedAsync(AppDbContext dbContext, CancellationToken cancellationToken)
     {
+        var hasData = await dbContext.TransactionCategories.AnyAsync(cancellationToken);
+        if (hasData)
+            return;
+
         var categories = GetDefaultCategories();
         await dbContext.TransactionCategories.AddRangeAsync(categories, cancellationToken);
     }
 
-    internal static IEnumerable<TransactionCategory> GetDefaultCategories()
+    public static IEnumerable<TransactionCategory> GetDefaultCategories()
     {
         yield return TransactionCategory.Create(
             AppConstants.IncomeTransactionCategory,

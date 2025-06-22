@@ -6,6 +6,7 @@ public class TransactionCategory : EntityBase
     public string Description { get; private set; }
     public EntityEnum.Status Status { get; private set; } = EntityEnum.Status.Enabled;
 
+    [MapperIgnore]
     public ICollection<TransactionType> TransactionTypes { get; private set; } =
         new List<TransactionType>();
 

@@ -1,6 +1,5 @@
 ﻿using System.Text.Json;
 using AppHost;
-using Microsoft.AspNetCore.Authentication.BearerToken;
 using PersonalFinanceManager.Application.Data.DTOs;
 using PersonalFinanceManager.Application.Data.Models;
 using PersonalFinanceManager.PlaywrightTests.Helpers;
@@ -24,16 +23,11 @@ public class TransactionCategoryTests(AspireManager aspireManager)
             AppHostConstants.ApiServiceProject,
             async page =>
             {
-                var response = await page.APIRequest.GetAsync(
-                    $"{BaseApiUrl}{TestConstants.API_TRANSACTION_CATEGORIES_ENDPOINT}"
+                await TransactionCategoryHelper.GetTransactionCategoriesAsync(
+                    page,
+                    BaseApiUrl!,
+                    _jsonOptions
                 );
-                var transactionCategoryJson = await response.TextAsync();
-                var transactionCategories = JsonSerializer.Deserialize<
-                    List<TransactionCategoryDto>
-                >(transactionCategoryJson, _jsonOptions);
-                Assert.Equal(200, response.Status);
-                Assert.NotNull(transactionCategories);
-                Assert.True(transactionCategories.Count > 0);
             }
         );
     }
@@ -47,18 +41,15 @@ public class TransactionCategoryTests(AspireManager aspireManager)
             AppHostConstants.ApiServiceProject,
             async page =>
             {
-                var response = await page.APIRequest.GetAsync(
-                    $"{BaseApiUrl}{TestConstants.API_TRANSACTION_CATEGORIES_ENDPOINT}"
-                );
-                var transactionCategoryJson = await response.TextAsync();
-                var transactionCategories = JsonSerializer.Deserialize<
-                    List<TransactionCategoryDto>
-                >(transactionCategoryJson, _jsonOptions);
-                Assert.Equal(200, response.Status);
-                Assert.NotNull(transactionCategories);
-                Assert.True(transactionCategories.Count > 0);
+                var transactionCategories =
+                    await TransactionCategoryHelper.GetTransactionCategoriesAsync(
+                        page,
+                        BaseApiUrl!,
+                        _jsonOptions
+                    );
+
                 var firstCategory = transactionCategories.First();
-                response = await page.APIRequest.GetAsync(
+                var response = await page.APIRequest.GetAsync(
                     $"{BaseApiUrl}{TestConstants.API_TRANSACTION_CATEGORIES_ENDPOINT}/{firstCategory.Id}"
                 );
                 var transactionCategoryByIdJson = await response.TextAsync();
@@ -130,18 +121,15 @@ public class TransactionCategoryTests(AspireManager aspireManager)
                 {
                     { "Authorization", $"Bearer {token}" },
                 };
-                var response = await page.APIRequest.GetAsync(
-                    $"{BaseApiUrl}{TestConstants.API_TRANSACTION_CATEGORIES_ENDPOINT}"
-                );
 
-                var transactionCategoryJson = await response.TextAsync();
-                var transactionCategories = JsonSerializer.Deserialize<
-                    List<TransactionCategoryDto>
-                >(transactionCategoryJson, _jsonOptions);
-                Assert.Equal(200, response.Status);
-                Assert.NotNull(transactionCategories);
-                Assert.True(transactionCategories.Count > 0);
-                var firstCategory = transactionCategories.First();
+                var transactionCategories =
+                    await TransactionCategoryHelper.GetTransactionCategoriesAsync(
+                        page,
+                        BaseApiUrl!,
+                        _jsonOptions
+                    );
+
+                var firstCategory = transactionCategories[0];
                 var data = new Dictionary<string, object>()
                 {
                     { "Id", firstCategory.Id },
@@ -149,24 +137,24 @@ public class TransactionCategoryTests(AspireManager aspireManager)
                     { "Description", "This is an updated test category" },
                     { "Status", 1 },
                 };
-                response = await page.APIRequest.PutAsync(
+                var updateResponse = await page.APIRequest.PutAsync(
                     $"{BaseApiUrl}{TestConstants.API_TRANSACTION_CATEGORIES_ENDPOINT}/{firstCategory.Id}",
                     new() { DataObject = data, Headers = headers }
                 );
 
-                Assert.NotNull(response);
-                Assert.Equal(204, response.Status);
+                Assert.NotNull(updateResponse);
+                Assert.Equal(204, updateResponse.Status);
 
                 // Verify the update by fetching the category again
-                response = await page.APIRequest.GetAsync(
+                var transactionCategoryresponse = await page.APIRequest.GetAsync(
                     $"{BaseApiUrl}{TestConstants.API_TRANSACTION_CATEGORIES_ENDPOINT}/{firstCategory.Id}"
                 );
-                transactionCategoryJson = await response.TextAsync();
+                var transactionCategoryJson = await transactionCategoryresponse.TextAsync();
                 var updatedTransactionCategory = JsonSerializer.Deserialize<TransactionCategoryDto>(
                     transactionCategoryJson,
                     _jsonOptions
                 );
-                Assert.Equal(200, response.Status);
+                Assert.Equal(200, transactionCategoryresponse.Status);
                 Assert.NotNull(updatedTransactionCategory);
                 Assert.Equal(firstCategory.Id, updatedTransactionCategory.Id);
                 Assert.Equal("Updated Category", updatedTransactionCategory.Name);

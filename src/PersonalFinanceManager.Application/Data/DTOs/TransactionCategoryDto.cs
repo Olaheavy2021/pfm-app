@@ -1,4 +1,6 @@
-﻿namespace PersonalFinanceManager.Application.Data.DTOs;
+﻿using Humanizer;
+
+namespace PersonalFinanceManager.Application.Data.DTOs;
 
 public record UpsertTransactionCategoryDto(
     string Name,
@@ -12,6 +14,10 @@ public record TransactionCategoryDto(
     string Description,
     EntityEnum.Status Status,
     DateTimeOffset Created,
-    DateTimeOffset LastModified,
-    IReadOnlyList<TransactionType> TransactionTypes
-);
+    DateTimeOffset LastModified
+)
+{
+    public string StatusText => Status.ToString().Humanize();
+    public string CreatedAgo => Created.Humanize();
+    public string LastModifiedAgo => LastModified.Humanize();
+}
