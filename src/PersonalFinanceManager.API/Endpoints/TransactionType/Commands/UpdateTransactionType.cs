@@ -52,7 +52,7 @@ public class UpdateTransactionType : ICarterModule
                 .NotEmpty()
                 .WithMessage("The transaction type description must not be empty.")
                 .MaximumLength(200)
-                .WithMessage("The transaction type description must not exceed 500 characters.");
+                .WithMessage("The transaction type description must not exceed 200 characters.");
             RuleFor(x => x.Status)
                 .IsInEnum()
                 .WithMessage("The transaction type status must be a valid enum value.");
